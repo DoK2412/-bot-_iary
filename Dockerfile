@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt --root-user-a
 
 COPY ./ /code/
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "./add.py", "--host", "0.0.0.0", "--port", "8080"]
