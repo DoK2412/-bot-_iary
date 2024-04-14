@@ -237,10 +237,15 @@ def nat_appdata(call):
 
 @bot.message_handler(content_types=['text'])
 def receiving_name(message):
-    user = User.get_user(message.from_user.id)
-    user.name_notebook = message.text
-    bot.send_message(message.from_user.id, 'Введите текст.')
-    bot.register_next_step_handler(message, save_notebook)
+    try:
+        user = User.get_user(message.from_user.id)
+        user.name_notebook = message.text
+        bot.send_message(message.from_user.id, 'Введите текст.')
+        bot.register_next_step_handler(message, save_notebook)
+    except Exception as ecx:
+        bot.send_message(message.from_user.id,
+                         "При выполнении запроса произошла ошибка, повторите запрос либо напишите обратную связь c описанием действий вызвавших ошибку.")
+
 
 @bot.message_handler(content_types=['text'])
 def save_notebook(message):

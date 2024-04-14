@@ -17,7 +17,8 @@ class Authorization(object):
     def user_verification(cls, user_teleg_id):
         with Session(engin) as session:
             user_id = session.exec(select(Users).where(Users.user_id == user_teleg_id)).first()
-        return user_id
+        if user_id:
+            return user_id
 
     @classmethod
     def adding_user(cls, user_teleg_id, user_name_teleg):
@@ -39,7 +40,10 @@ class Authorization(object):
     def user_id(cls, user_teleg_id):
         with Session(engin) as session:
             user_id = session.exec(select(Users).where(Users.user_id == user_teleg_id)).first()
-            return user_id.id
+            if user_id is None:
+                return None
+            else:
+                return user_id.id
 
 
 class UserResponse(object):
@@ -54,15 +58,15 @@ class UserResponse(object):
         def daily_deletion():
             date = datetime.datetime.now().strftime('%Y-%m-%d')
             user_id = Authorization.user_id(self.message.from_user.id)
-
-            with Session(engin) as session:
-                user_view = session.exec(select(Notes).where(Notes.user_id == user_id)).all()
-                for view in user_view:
-                    if view.date < date:
-                        session.delete(view)
-                        session.commit()
-                    else:
-                        continue
+            if user_id:
+                with Session(engin) as session:
+                    user_view = session.exec(select(Notes).where(Notes.user_id == user_id)).all()
+                    for view in user_view:
+                        if view.date < date:
+                            session.delete(view)
+                            session.commit()
+                        else:
+                            continue
 
         daily_deletion()
         if self.message.text == 'Авторизация':
@@ -111,7 +115,10 @@ class UserResponse(object):
             user = User.get_user(self.message.chat.id)
             with Session(engin) as session:
                 user_notebook = session.exec(select(Notebook).where(Notebook.user_id == user_id)).all()
-            WorkingNotebook().get_notebook(self.message, user, self.bot, user_notebook)
+            if len(user_notebook) == 0:
+                self.bot.send_message(self.message.chat.id, "Отсутствуют записи в блокноте.")
+            else:
+                WorkingNotebook().get_notebook(self.message, user, self.bot, user_notebook)
 
 
 class Feedbacks(object):
