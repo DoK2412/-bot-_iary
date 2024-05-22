@@ -81,7 +81,7 @@ async def send_random_value(callback: types.CallbackQuery):
 
 @dp.callback_query(F.data == "Добавить заметку")
 async def send_random_value(callback: types.CallbackQuery):
-    await callback.message.delete()
+    # await callback.message.delete()
     user = User.get_user(callback.message.chat.id)
     await Note(callback=callback, user=user).adding_note()
 
