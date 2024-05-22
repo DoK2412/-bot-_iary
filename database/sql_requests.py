@@ -4,10 +4,10 @@ from typing import Optional
 
 class Users(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int
+    telegram_id: int
     registration_date: str
     active: bool
-    telegramm_teg: str
+    telegram_teg: str
 
 
 class Feedback(SQLModel, table=True):
@@ -21,7 +21,7 @@ class Notes(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int
     date: str
-    nate: str
+    note: str
     creation_date: str
     sticker: str
 
