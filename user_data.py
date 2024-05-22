@@ -5,16 +5,24 @@ class User:
 
     def __init__(self, chat_id):
 
-        self.id_chat = chat_id         # id чата *
+        self.telegram_id = chat_id
+        self.user_id = None
         self.data = None
+        self.note_id = None
+        self.name_notebook = None
+        self.notebook_id = None
+
+
+
+
         self.date_note = None
         self.user_nate = None
         self.message_id = None
         self.message_nate_id = None
         self.big_user_nate = list()
-        self.name_notebook = None
         self.text_notebook = None
         self.big_user_note_book = list()
+        self.user_sticker = None
 
 
     @classmethod
