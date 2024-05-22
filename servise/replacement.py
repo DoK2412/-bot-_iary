@@ -135,22 +135,25 @@ class Note(object):
             user_note = session.exec(
                 select(Notes).where(Notes.user_id == self.user.user_id)).all()
             day_list = list()
-            for note in user_note:
-                if note.date in day_list:
-                    continue
-                else:
-                    day_list.append(note.date)
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[])
-            for day in day_list:
-                keyboard.inline_keyboard.append(
-                    [
-                        InlineKeyboardButton(text=day,
-                                             callback_data='Выбранный день ' + day)
-                    ]
-                )
-            await self.callback.message.answer(
-                f'Выберите необходимый день.',
-                reply_markup=keyboard)
+            if len(user_note) == 0:
+                await self.callback.message.answer("У Вас нет заметок.")
+            else:
+                for note in user_note:
+                    if note.date in day_list:
+                        continue
+                    else:
+                        day_list.append(note.date)
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[])
+                for day in day_list:
+                    keyboard.inline_keyboard.append(
+                        [
+                            InlineKeyboardButton(text=day,
+                                                 callback_data='Выбранный день ' + day)
+                        ]
+                    )
+                await self.callback.message.answer(
+                    f'Выберите необходимый день.',
+                    reply_markup=keyboard)
 
     async def specific_day(self, day):
         with Session(engin) as session:
